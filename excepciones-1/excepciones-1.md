@@ -1,6 +1,12 @@
 # Excepciones en Python - Primera Parte: No las estás usando lo suficiente.
 
-Este post forma parte de una serie de conceptos que son, de cierta manera, periféricos a la Ciencia de Datos. Aprender estas cosas es necesario porque lo que vamos a ver en estos posts son conceptos bastante transversales a los proyectos que quieran hacer: permiten mejorar *un poquito todos los códigos*. Además, saber por qué se usan quizás nos ayude a entender mejor cuándo y por qué implementarlo.
+¿Alguna vez estuviste googleando durante horas cómo "hacer que funcione" una librería?
+¿Te preguntaste cómo hacer que tu código quede un poco más fácil de leer y de modificar?
+¿Te interesaría conocer más acerca de técnicas utilizadas en IA?
+
+Para responder estas preguntas y, por qué no, generar otras, es que desde Ninja quisimos abrir un nuevo espacio de comunicación. 
+
+Este artículo forma parte de una serie de conceptos que son, de cierta manera, periféricos a la Ciencia de Datos. Aprender estas cosas es necesario porque lo que vamos a ver en estos posts son conceptos bastante transversales a los proyectos que quieran hacer: permiten mejorar *un poquito todos los códigos*. Además, saber por qué se usan quizás nos ayude a entender mejor cuándo y por qué implementarlo.
 
 Sin más introducciones, vamos ahora sí al tema que nos ocupa en este caso: las **excepciones en Python**.
 
