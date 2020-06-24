@@ -47,7 +47,7 @@ Pensamos una solución: como la suma de las listas tienen que ser una lista, pod
 Por ejemplo, si las listas son de distinto tamaño, devolvemos `-1`.
 Entonces queda:
 
-```
+```python
 def sumar_listas_error(lista1, lista2):
     if len(lista1) != len(lista2):
         return -1
@@ -121,7 +121,7 @@ def sumar_listas_lanza(lista1, lista2):
     return lista_total
 ```
 y si ahí tratamos de sumar las listas que habíamos dicho antes, tenemos
-```
+```python
 >>> sumar_listas_lanza([1, 2, 3], [10, 20, 30, 40])
 Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
