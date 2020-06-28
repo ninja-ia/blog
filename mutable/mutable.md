@@ -15,6 +15,7 @@ Así que vamos a usar nuestra humilde, pero correcta función!
 [2, 3, 5]
 >>> una_lista_corta = agregar_a_lista(5)
 >>> print(una_lista_corta)
+[5]
 >>> otra_lista_corta = agregar_a_lista(7)
 ```
 
