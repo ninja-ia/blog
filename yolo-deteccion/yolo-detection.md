@@ -35,7 +35,7 @@ Tengan en mente que este archivo está escrito para Python 2, que ya está depre
 Ahora vamos al grano, el interés de esta publicación es realizar la detección de un video frame por frame. La función `VideoCapture` del paquete `cv2` procesa el video y es posible leer y guardar cada frame usando `read()`. Pero el archivo `darknet.py` no entiende el formato de `frame`; necesita una imagen. Para poder correr la red en un video es necesario convertir los frames a formato imagen, y para lograrlo escribimos una función que explicamos más abajo.
 
 
-##Nuestra función
+## Nuestra función
 
 
 Utilizaremos la función de detección en `darknet.py`, así que es menester alimentarla con algo que pueda digerir. Así es que necesitamos saber qué es. Notamos que `detect` carga la imagen utilizando la función `load_image`, una función de C que `darknet.py` traduce a Python. Buscándola, descubrimos que está escrita en el archivo `image.c` dentro del directorio `src/`, y que llama a la función `load_image_stb` escrita algunas líneas arriba en el mismo archivo. La salida de esta función es la entrada de `detect` con lo cual nos dice cuál es el formato deseado para el frame. En este caso es la clase `darknet.IMAGE`, definida por
@@ -84,7 +84,7 @@ Esto define el correcto ordenamiento del vector. Siguiendo la notación de arrib
 [z1, z2, z3, ..., y1, y2, y3, ..., x1, x2, x3, ...]
 ```
 
-Ahora que conocemos el ordenamiento, podemos escribir nuestra propia función que convierta frames en imágenes de la clase IMAGE con el orden específico. La función queda
+Ahora que conocemos el ordenamiento, podemos escribir nuestra propia función que convierta frames en imágenes de la clase `IMAGE` con el orden específico. La función queda
 
 ```python
 def frameToImage(frame):
@@ -285,7 +285,7 @@ def rotateimage(videoframe,angle):
 
 ```
     
-Y finalmente, escribimos un archivo que llama a la función detect y la corre. Además también carga el video y toma cada frame para su detección. Sólo necesitamos importar nuestra librería como `import library as lib` y llamar a la función `detect` como `r = lib.detect(frame, meta, imagerot)`. Debajo podrán encontrar el programa.
+Y finalmente, escribimos un archivo que llama a la función `detect` y la corre. Además también carga el video y toma cada frame para su detección. Sólo necesitamos importar nuestra librería como `import library as lib` y llamar a la función `detect` como `r = lib.detect(frame, meta, imagerot)`. Debajo podrán encontrar el programa.
 
 ```python
 import numpy as np
