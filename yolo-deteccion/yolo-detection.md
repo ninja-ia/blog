@@ -12,7 +12,7 @@ Si pensamos en una imagen representada por una matriz, donde cada píxel es un v
 
 ![CNN](cnn.jpg)
 
-La pregunta entonces es cómo pasarle esta información adicional (filtrada de la imagen original) a una red neuronal. La respuesta a este problema viene dado por las redes convolucionales. En ellas uno pasa solo la imagen original como input. Luego, en las capas convolucionales, cada neurona (convolucional) aplica un filtro a la imagen que llega de la capa anterior y entrega como resultado una nueva imagen filtrada. Y entonces, ¿qué filtro aplican estas capas convolucionales?. La respuesta es ninguno en especial. Las redes convolucionales heredan la filosofía de las redes multiperceptrón donde cada neurona entrena sus pesos y por lo tanto la operación que esta realiza sobre la entrada. En las neuronas convolucionales lo que se entrena es el filtro aplicado a la entrada. Además, uno puede incluir muchas capas convolucionales, con lo cual, cada capa aplica una serie de filtros sobre las imágenes provenientes de las capas anteriores. Esto permite "apilar" una sucesión de filtros donde cada uno recoge alguna característica distinta de la imagen. Esta lógica permite una inmensa flexibilidad y un potencial enorme a la hora de extraer información sobre una imagen original. Finalmente, al final de las capas convolucionales se suele agregar alguna capa multiperceptrón para que esta actúe como clasificador, regresor, etcétera.
+La pregunta entonces es cómo pasarle esta información adicional (filtrada de la imagen original) a una red neuronal. La respuesta a este problema viene dado por las redes convolucionales. En ellas uno pasa sólo la imagen original como input. Luego, en las capas convolucionales, cada neurona (convolucional) aplica un filtro a la imagen que llega de la capa anterior y entrega como resultado una nueva imagen filtrada. Y entonces, ¿qué filtro aplican estas capas convolucionales?. La respuesta es ninguno en especial. Las redes convolucionales heredan la filosofía de las redes multiperceptrón donde cada neurona entrena sus pesos y por lo tanto la operación que esta realiza sobre la entrada. En las neuronas convolucionales lo que se entrena es el filtro aplicado a la entrada. Es más: podemos aplicar muchas capas convolucionales, de modo que cada capa aplica una serie de filtros sobre las imágenes provenientes de las capas anteriores. Esto permite "apilar" una sucesión de filtros donde cada uno recoge alguna característica distinta de la imagen. Esta lógica permite una inmensa flexibilidad y un potencial enorme a la hora de extraer información sobre una imagen original. Finalmente, al final de las capas convolucionales se suele agregar alguna capa multiperceptrón para que esta actúe como clasificador, regresor, etcétera.
 
 Bajo esta lógica es que funcionan las redes convolucionales y en particular la arquitectura de YOLO. Teniendo esto presente es que vamos a utilizar el framework de Darknet [https://pjreddie.com/darknet/] para implementar YOLO y mostraremos los primeros problemas a los que uno se enfrenta cuando decide utilzar Python para tal fin. Utilizaremos para la tarea YOLOv3.
 
@@ -53,7 +53,7 @@ Recuerden que una imagen tiene una altura `h`, un ancho `w`, `h*w` píxeles y tr
 Pero lo que tenemos a partir de la lectura de `cv2` son frames. Un frame es un `array` con tres coordenadas donde las dos primeras refieren a la posición, con coordenadas `h` y `w` y la tercera al vector de colores. Podemos pictorizarlo como
 
 ```
-   [ [[x1 y1 z1], [x2 y2 z2],... [xn yn zn]], [[xn+1 yn+1 zn+1],... ], ... [ ] ]
+   [ [[x1 y1 z1], [x2 y2 z2],... [xn yn zn]], [[xn+1 yn+1 zn+1],... ], ... ]
 ```
 
 y estos números corren de cero a 255: son coordenadas RGB.
@@ -124,7 +124,7 @@ def sample(probs):
     return len(probs)-1
 
 def c_array(ctype, values):
-    arr = (ctype*len(values))()
+    arr = (ctype * len(values))()
     arr[:] = values
     return arr
 
@@ -224,7 +224,7 @@ predict_image = lib.network_predict_image
 predict_image.argtypes = [c_void_p, IMAGE]
 predict_image.restype = POINTER(c_float)
 
-###void draw_detections(image im, detection *dets, int num, float thresh, char **names, image **alphabet, int classes)   
+###void draw_detections(image im, detection *dets, int num, float thresh, char **names, image **alphabet, int classes)
 draw_detections = lib.draw_detections
 draw_detections.argtypes = [IMAGE, POINTER(DETECTION),c_int, c_float,c_void_p, c_void_p,c_int]
 
@@ -256,14 +256,12 @@ def detect(net, meta, image, thresh=.5, hier_thresh=.5, nms=.45):
     free_detections(dets, num)
     return res
     
-#----------------------------------------------------------------------------------------------------------#
-
 def frameToImage(frame):
-  frame = (frame/255).astype(ct.c_float)
+  frame = (frame/255).astype(c_float)
   me = np.hstack((frame[:, :, 2].flatten(), frame[:, :, 1].flatten(), frame[:, :, 0].flatten()))
-  img = IMAGE(frame.shape[1], frame.shape[0], 3, me.ctypes.data_as(ct.POINTER(ct.c_float)))
+  img = IMAGE(frame.shape[1], frame.shape[0], 3, me.ctypes.data_as(POINTER(c_float)))
   return img
-#----------------------------------------------------------------------------------------------------------#
+
 def rotateimage(videoframe,angle):
   (h, w) = videoframe.shape[:2]
   (cX, cY) = (w // 2, h // 2)
@@ -280,9 +278,6 @@ def rotateimage(videoframe,angle):
   imagerot = cv2.warpAffine(videoframe, M, (nW, nH))  
     
   return imagerot
-#----------------------------------------------------------------------------------------------------------#
-
-
 ```
     
 Y finalmente, escribimos un archivo que llama a la función `detect` y la corre. Además también carga el video y toma cada frame para su detección. Sólo necesitamos importar nuestra librería como `import library as lib` y llamar a la función `detect` como `r = lib.detect(frame, meta, imagerot)`. Debajo podrán encontrar el programa.
@@ -291,17 +286,16 @@ Y finalmente, escribimos un archivo que llama a la función `detect` y la corre.
 import numpy as np
 import cv2 
 import ctypes as ct
-from ctypes import *
 import math
 import random
 import libreria as lib
 
 # Carga la red, los pesos y las etiquetas
-net = lib.load_net(b"/home/user/darknet/cfg/yolov3.cfg", b"/home/user/darknet/yolov3.weights",0);
-meta = lib.load_meta(b"/home/user/darknet/cfg/coco.data");
+net = lib.load_net(b"/home/user/darknet/cfg/yolov3.cfg", b"/home/user/darknet/yolov3.weights", 0)
+meta = lib.load_meta(b"/home/user/darknet/cfg/coco.data")
   
 # Lee el video y calcula el número total de frames 
-video = cv2.VideoCapture("./video2.mp4") 
+video = cv2.VideoCapture("./video2.mp4")
 number = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
 
 # Podemos definir desde qué frame y hasta cuál queremos ir acá (si queremos ir al último usamos ultimo = number)
@@ -309,32 +303,28 @@ primero = 0
 ultimo = 10
 currentframe = primero
 
-print('\n'+'DETECCION USANDO DARKNET + YOLOV3')
-print('\n'+'Cantidad de frames totales = ',number)
-print('\n'+'Primer frame = ',primero,'\n' + 'Ultimo frame =',ultimo)
-print('\n' + '\n' )
+print("\nDETECCION USANDO DARKNET + YOLOV3")
+print(f"\nCantidad de frames totales = {number}")
+print(f"\nPrimer frame = {primero}\nUltimo frame = {ultimo}")
+print("\n\n" )
 
 # Corre la red para los frames seleccionados
 while currentframe < ultimo:
     
-    video.set(1,currentframe)
-    ret,framevid = video.read()
-    print(currentframe)  
+    video.set(1, currentframe)
+    ret, framevid = video.read()
+    print(currentframe)
     
     if ret: 
-        
-        imagerot = lib.rotateimage(framevid,90) # Puede ser necesario rotar los frames del video
+        imagerot = lib.rotateimage(framevid, 90) # Puede ser necesario rotar los frames del video
         r = lib.detect(net, meta, imagerot); # Procesado de la red
         print(r)
         print('###########################################################################')
-    
-        
     else: 
         break
     
     currentframe = currentframe + 1
  
-    
 # Libera el video
 video.release() 
 ```
