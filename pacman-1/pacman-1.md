@@ -12,9 +12,16 @@ Les pregunto entonces: en el nivel inicial (que estes que copiamos aquí) y sabi
 
 ![Pacman](pacman_original.png)
 
-
-
 En la sección que sigue vamos a describir un poco cómo fue el diseño y la implementación del Pacman en Python.
 Si no les interesa tanto esto, pueden saltearla e ir directamente a la sección resultados.
 
 ## El Pacman
+
+Vamos a describir el estado del juego Pacman en la clase `Estado`.
+Esta clase va a tener (por ahora) los siguientes atributos:
+
+- `mapa`: un array bidimensional que tiene `1` cuando hay una bolita, `0` cuando está vacío y `-1` cuando el lugar está prohibido.
+- `posicion`: la posición en la que se encuentra el Pacman
+- `puntaje`: cuántas bolitas comió
+- `cantidad_pasos`: cuántos pasos hizo
+
