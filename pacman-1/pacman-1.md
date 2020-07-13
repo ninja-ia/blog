@@ -25,3 +25,105 @@ Esta clase va a tener (por ahora) los siguientes atributos:
 - `puntaje`: cuántas bolitas comió
 - `cantidad_pasos`: cuántos pasos hizo
 
+Quiero aclarar aquí que hay una decisión bastante discutible en cuanto a diseño: que la posición del Pacman forme parte del `Estado`.
+Quizás (seguramente, incluso) sea mejor pensar tres clases: `Pacman`, `Mapa`, `Fantasma` y que el estado del juego sea una composición de las tres (ya sea en una clase o no).
+Esta estrategia de diseño la vamos a usar más adelante, pero por ahora (para nuestro objetivo), con esto es necesario.
+Cuando queramos seguir (no voy a poner más spoilers) vamos a ver cómo adaptamos esta funcionalidad a un diseño un poco más sofisticado.
+
+Por ahora, este `Estado` se encarga *de todo*.
+Afortunadamente, igual, *todo* es bastante poco en este caso: sería avanzar una posición y saber si se terminó el mapa:
+    
+### Avanzar una posición
+
+```python
+def avanzar_posicion(self, accion: np.ndarray):
+    nueva_posicion = self.posicion + accion
+    if nueva_posicion[0] == np.shape(self.mapa)[0]:
+        nueva_posicion[0] = 0
+    elif nueva_posicion[0] == -1:
+       nueva_posicion[0] = np.shape(self.mapa)[0] - 1
+    if nueva_posicion[1] == np.shape(self.mapa)[1]:
+        nueva_posicion[1] = 0
+    elif nueva_posicion[1] == -1:
+        nueva_posicion[1] = np.shape(self.mapa)[1] - 1
+    self.cantidad_pasos += 1
+    if self.mapa[tuple(nueva_posicion)] != -1:
+        self.puntaje += self.mapa[tuple(nueva_posicion)]
+        self.posicion = nueva_posicion
+        self.mapa[tuple(nueva_posicion)] = 0
+```
+
+`avanzar_posicion` toma `accion`, un array de dos posiciones: cuánto se mueve en las filas y en las columnas (`+1`, `0`, `-1`), de modo que quedan codificados los movimientos:
+- `[1, 0] = ↓`: sumar una fila es análogo a ir para abajo
+- `[-1, 0] = ↑`: restar una fila es análogo a ir para arriba
+- `[0, 1] = →`: sumar una columna es análogo a ir para la derecha
+- `[0, -1] = ←`: restar una columna es análogo a ir para la izquierda
+
+Avanzar posición es bastante fácil, es cuestión de `posicion_nueva = posicion_actual + accion`.
+Luego de eso hay un par de cosas extra:
+
+1. Si el Pacman "se cae del mapa", aparece del otro lado: eso son las siguientes 8 líneas.
+2. El mapa se actualiza sólo si la nueva posición no está prohibida.
+3. Cuando se mueve, al puntaje le sumamos lo que estaba en esa posición (1 si había una bolita, que se comió), y pasamos esa posición a 0.
+
+### Terminó el mapa
+
+```python
+@property
+def completo(self):
+    return not (self.mapa == 1).any()
+```
+
+Éste lo agregamos únicamente porque tiene el decorador `property`, que quizás no lo conozcan todos.
+Podríamos tener pronto un lindo artículo sobre decoradores en Python, pero brevemente: `@property` permite que el método sea llamado como un atributo.
+Es decir, que el mapa esté `completo` o no lo sabemos sólo haciendo una cuenta, no podemos configurarlo fácilmente como un atributo sin más.
+Más aún, uno no debería poder modificar el `completo` desde afuera de la clase `Estado`.
+En muchos lenguajes esto se resuelve con lo que se llaman `getter/setter`: en vez de que exista el atributo `completo` existe el método `get_completo()`, que hace la cuenta necesaria.
+En Python, eso se resuelve de una forma súper limpia con los `@property`.
+### Bonus: `__str__`
+
+Tenemos que imprimir el estado del juego de alguna manera.
+Una posibilidad es hacer una función que toma el estado y genera un `string`, pero Python viene preparado para eso.
+Cuando escribimos `print`, llamamos (básicamente) al método `__str__` de la clase.
+Es decir, si modificamos `__str__`, podemos hacer que `print(estado)` imprima en pantalla directamente el mapa como queremos.
+Quizás podemos hacer más adelante una nota de `__str__`, `__repr__` y similares, pero por ahora vamos a centrarnos en esta implementación.
+Queremos que el dibujo primero diga cómo va el juego (puntaje y cantidad de pasos) y luego dibuje un cuadrado lleno cuando hay una pared (o sea, está prohibido), un espacio vacío cuando no hay nada y un puntito cuando hay una bolita.
+Además, al pacman lo vamos a simbolizar con una O.
+Así, queda
+
+```python
+def __str__(self):
+    dibujo = f'puntos: {self.puntaje}, pasos: {self.cantidad_pasos}\n'
+    for i, row in enumerate(self.mapa):
+        for j, val in enumerate(row):
+            if (np.array([i, j]) != self.posicion).any():
+                if val == 1:
+                    dibujo = dibujo + '·'
+                elif val == 0:
+                    dibujo = dibujo + ' '
+                else:
+                    dibujo = dibujo + '█'
+            else:
+                dibujo = dibujo + 'O'
+        dibujo = dibujo + '\n'
+    return dibujo
+```
+
+y esto va a salir cada vez que hagamos `print(estado)`.
+
+## Resultados
+
+¿Cómo se "juega" a este pacman entonces?
+Creamos un `estado` a partir de un `mapa` y, mientras no esté completo, elegimos una acción al azar y avanzamos el estado:
+```python
+estado = Estado(mapa)
+while not estado.completo:
+    accion = random.choice(acciones)
+    estado.avanzar_posicion(accion)
+print(f"Terminé en {estado.cantidad_pasos} pasos")
+```
+
+Este código lo ejecutamos (agregándole algún que otro `print` y `sleep` para que se pueda ver) y tenemos un `Pacman` que se mueve al azar en un `mapa`.
+Como ejemplo, aquí va el resultado cuando el `mapa` es un mapa de `5x5` sin paredes:
+
+
