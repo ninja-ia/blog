@@ -127,3 +127,16 @@ Este código lo ejecutamos (agregándole algún que otro `print` y `sleep` para 
 Como ejemplo, aquí va el resultado cuando el `mapa` es un mapa de `5x5` sin paredes:
 
 
+En este ejemplo el borracho tardó <> pasos en completar el juego, que a 10 bolitas por segundo es lo mismo que tardar <> segundos.
+Obvio que éste fue un caso en particular, y tiene ese `random` por ahí.
+¿Qué pasa si lo ejecutamos muchas veces?
+¿Cuánto da en promedio la cantidad de pasos?
+A continuación va el histograma con 10 mil iteraciones.
+
+![Histograma de pasos que tardó en completar 5x5](histograma_5x5.png)
+
+En este histograma el promedio es 117.28 pasos (y la desviación estándar 41.67): aproximadamente 12s en resolver el mapa por completo.
+
+
+
+Antes de responder la pregunta del borracho jugando al Pacman, perdón si me voy un poco por las ramas, pero me surgió la pregunta: ¿cómo
