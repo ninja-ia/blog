@@ -137,6 +137,38 @@ A continuación va el histograma con 10 mil iteraciones.
 
 En este histograma el promedio es 117.28 pasos (y la desviación estándar 41.67): aproximadamente 12s en resolver el mapa por completo.
 
+Antes de responder la pregunta del borracho jugando al Pacman, perdón si me voy un poco por las ramas, pero me surgió la pregunta: ¿cómo depende la cantidad de pasos del tamaño del mapa?
 
+### Dependencia con el tamaño
 
-Antes de responder la pregunta del borracho jugando al Pacman, perdón si me voy un poco por las ramas, pero me surgió la pregunta: ¿cómo
+Estaba relativamente fácil: poner el código anterior en un loop que vaya haciendo el barrido para los distintos lados y guardar pasos promedio y desviación estándar.
+Resulta (de esto me enteré gracias a Patu Groisman, síganlo en [twitter](twitter.com/pgroisma) que es un capo) que este resultado fue encontrado teóricamente hace muuuy poco, y para tamaños muy grandes de mapa tiende a la forma `4 * (n log n)^2/pi`.
+
+Así sale este gráfico:
+
+![Pasos promedio en función del tamaño](pasos_vs_tamanio.png)
+
+Fíjense que hay una diferencia considerable, pero se va a ir achicando a medida que agrandemos `n`.[^1]
+
+### Ahora sí, ¿cuánto tarda el borracho?
+
+Con todo lo que hicimos, lo que queda es armar el mapa, que se ve así (un poquito más feo que el original, no?)
+
+![Mapa original en nuestra versión](original_consola.png)
+
+Y el histograma de pasos queda
+
+![Histograma de pasos que tardó en completar el mapa original](histograma_original.png)
+
+En promedio son 6999.2 pasos, con desviación estándar 2657.
+Con los tiempos que dijimos, de 10 pasos por segundo, a un borracho le llevaría ¡11 minutos! ganar al Pacman si no hubiera fantasmas.
+
+Todo este código está subido en un repo particular, que pueden chusmear, clonar, forkear y otros neologismos: https://www.github.com/ninja-ia/pacman
+
+## Y ahora, ¿qué?
+
+Podríamos quedarnos aquí, sí... pero nos gusta el Pacman y esto es un blog de Inteligencia Artificial.
+Dejamos para la próxima edición la pregunta: ¿cómo le enseñamos al borracho a jugar al Pacman? ¿Y a los fantasmitas?
+Nos vemos la próxima!
+
+[1]: Con este modelo, es demasiado costoso hacer las cuentas para `n` grandes, pero quizás luego completaremos este resultado con tamaños más grandes
