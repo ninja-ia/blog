@@ -8,7 +8,7 @@ Aprovechemos que no hay fantasmas para hacer jugar a un tipo de jugador que prob
 El borracho jugando al pacman juega completamente *al azar*.
 En cada momento elige de forma aleatoria para dónde va en el siguiente paso: para arriba, para abajo, para la izquierda o para la derecha.
 
-Les pregunto entonces: en el nivel inicial (que estes que copiamos aquí) y sabiendo que el pacman se desplaza a una velocidad aproximada de 10 casilleros por segundo, **¿cuánto tiempo dicen que tardaría un borracho en comerse todas las bolitas?**
+Les pregunto entonces: en el nivel inicial (que es este que copiamos aquí) y sabiendo que el pacman se desplaza a una velocidad aproximada de 10 casilleros por segundo, **¿cuánto tiempo dicen que tardaría un borracho en comerse todas las bolitas?**
 
 ![Pacman](pacman_original.png)
 
@@ -27,7 +27,7 @@ Esta clase va a tener (por ahora) los siguientes atributos:
 
 Quiero aclarar aquí que hay una decisión bastante discutible en cuanto a diseño: que la posición del Pacman forme parte del `Estado`.
 Quizás (seguramente, incluso) sea mejor pensar tres clases: `Pacman`, `Mapa`, `Fantasma` y que el estado del juego sea una composición de las tres (ya sea en una clase o no).
-Esta estrategia de diseño la vamos a usar más adelante, pero por ahora (para nuestro objetivo), con esto es necesario.
+Esta estrategia de diseño la vamos a usar más adelante, pero por ahora (para nuestro objetivo), con esto es suficiente.
 Cuando queramos seguir (no voy a poner más spoilers) vamos a ver cómo adaptamos esta funcionalidad a un diseño un poco más sofisticado.
 
 Por ahora, este `Estado` se encarga *de todo*.
