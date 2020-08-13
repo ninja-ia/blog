@@ -20,7 +20,7 @@ Si no les interesa tanto esto, pueden saltearla e ir directamente a la sección 
 Vamos a describir el estado del juego Pacman en la clase `Estado`.
 Esta clase va a tener (por ahora) los siguientes atributos:
 
-- `mapa`: un array bidimensional que tiene `1` cuando hay una bolita, `0` cuando está vacío y `-1` cuando el lugar está prohibido.
+- `mapa`: un array bidimensional que tiene `1` cuando hay una bolita, `0` cuando está vacío y `-1` cuando el lugar está prohibido
 - `posicion`: la posición en la que se encuentra el Pacman
 - `puntaje`: cuántas bolitas comió
 - `cantidad_pasos`: cuántos pasos hizo
@@ -152,11 +152,11 @@ Fíjense que hay una diferencia considerable, pero se va a ir achicando a medida
 
 ### Ahora sí, ¿cuánto tarda el borracho?
 
-Con todo lo que hicimos, lo que queda es armar el mapa, que se ve así (un poquito más feo que el original, no?)
+Con todo lo que hicimos, lo que queda es armar el mapa, que se ve así (un poquito más feo que el original, no?):
 
 ![Mapa original en nuestra versión](original_consola.png)
 
-Y el histograma de pasos queda
+Y el histograma de pasos queda:
 
 ![Histograma de pasos que tardó en completar el mapa original](histograma_original.png)
 
@@ -168,7 +168,7 @@ Todo este código está subido en un repo particular, que pueden chusmear, clona
 ## Y ahora, ¿qué?
 
 Podríamos quedarnos aquí, sí... pero nos gusta el Pacman y esto es un blog de Inteligencia Artificial.
-Dejamos para la próxima edición la pregunta: ¿cómo le enseñamos al borracho a jugar al Pacman? ¿Y a los fantasmitas?
+Dejamos para la próxima edición la pregunta: ¿cómo le *enseñamos* al borracho a jugar al Pacman? ¿Y a los fantasmitas?
 Nos vemos la próxima!
 
 [1]: Con este modelo, es demasiado costoso hacer las cuentas para `n` grandes, pero quizás luego completaremos este resultado con tamaños más grandes
