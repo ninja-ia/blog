@@ -74,10 +74,10 @@ variables_dunder/archivo_de_prueba.py
 
 ```
 - paquete
-  - bin/
-    - script.py
-  - carpeta_de_datos/
-    - datos_muy_importantes.csv
+  ├- bin/
+  ├- script.py
+  └- carpeta_de_datos/
+     └- datos_muy_importantes.csv
 ```
 
 Y el archivo `script.py` chequea que exista el archivo de datos muy importantes:
@@ -157,6 +157,4 @@ Pablo
 
 
 [^1]: Recuerden que importar un archivo en `python` es, esencialmente, _ejecutarlo_
-
-
-Porque las rutas _relativas_ en `python` no son relativas al archivo que están ejecutando, sino al directorio en el que están trabajando cuando lo ejecutan. Tratemos de ser un poco más concretos: i
+[^2]: OK, _técnicamente_ es el nombre del módulo.
