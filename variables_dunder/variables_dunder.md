@@ -1,8 +1,14 @@
-# Qué son las variables "dunder"?
+# ¿Qué son las variables "dunder"?
 
 El término `dunder` viene de _double underscore_, es decir, doble guión bajo. En general, en Python, llamamos variables _dunder_ a las que empiezan y terminan con dos guiones bajos. Por ejemplo, si alguna vez programaron una clase en Python, seguramente hayan usado el método `__init__`, que es el inicializador del objeto, y es un método _dunder_.
 
-Pero las variables _dunder_ son un poco más opcionales, y su uso es un poco más críptico a veces. En este artículo vamos a ver dos ejemplos de variables _dunder_ muy útiles, que quizás alguna vez hayas visto. Por ejemplo, alguna vez viste escrito esto en un código?
+Pero las variables _dunder_ son un poco más opcionales, y su uso es un poco más críptico a veces. En este artículo vamos a ver dos ejemplos de variables _dunder_ muy útiles, que quizás alguna vez hayas visto: `__name__` y `__file__`.
+
+
+## Variable `__name__`
+
+
+¿Alguna vez viste escrito esto en un código?
 
 ```python
 
@@ -13,8 +19,6 @@ def main():
 if __name__ == '__main__':
     main()
 ```
-
-## Variable `__name__`
 
 La variable `__name__` es una de las variables más raras de todas, porque depende de cómo se ejecuta el archivo. En un ejemplo muy sencillo, construyamos el archivo `archivo_de_prueba.py` con este contenido:
 
@@ -53,7 +57,7 @@ print("Mi archivo es:")
 print(__file__)
 ```
 
-Cuando lo ejecutamos, obtenemos
+Cuando lo ejecutamos, obtenemos:
 
 ```
 $ python archivo_de_prueba.py
@@ -74,10 +78,10 @@ variables_dunder/archivo_de_prueba.py
 
 ```
 - paquete
-  ├- bin/
-  ├- script.py
-  └- carpeta_de_datos/
-     └- datos_muy_importantes.csv
+  └- bin/
+  | ├- script.py
+  ├- carpeta_de_datos/
+    └- datos_muy_importantes.csv
 ```
 
 Y el archivo `script.py` chequea que exista el archivo de datos muy importantes:
@@ -85,7 +89,7 @@ Y el archivo `script.py` chequea que exista el archivo de datos muy importantes:
 ```python
 import os
 
-existe_el_archivo = os.path.exists('../datos/datos_muy_importantes.csv')
+existe_el_archivo = os.path.exists('../carpeta_de_datos/datos_muy_importantes.csv')
 
 if existe_el_archivo:
     print("Tranquiles! Los datos muy importantes están!")
@@ -108,7 +112,7 @@ Tranquiles! Los datos muy importantes están!
 Ooops, creo que perdimos todos los datos
 ```
 
-Porque, claro, los datos están en `../datos` relativo al archivo _script.py_; pero si ponemos `../datos` así nomás, lo va a buscar en la ruta relativa al directorio en el que estamos parados al ejecutarlo! Muchas veces esto se resuelve de una forma _muy_ poco portable: poniendo la ruta absoluta al archivo `datos_muy_importantes.csv`. Pero ahora sí, viene `__file__` al rescate! Porque lo podemos usar para elegir el directorio base respecto del cual elegimos los archivos. Para eso, usamos `os.path.dirname` (que, a partir de una ruta absoluta o relativa, devuelve el _directorio_ en el que está el archivo) y `os.path.abspath`, que a partir de una ruta relativa genera la ruta absoluta.
+Porque, claro, los datos están en `../carpeta_de_datos` relativo al archivo _script.py_; pero si ponemos `../carpeta_de_datos` así nomás, lo va a buscar en la ruta relativa al directorio en el que estamos parados al ejecutarlo! Muchas veces esto se resuelve de una forma _muy_ poco portable: poniendo la ruta absoluta al archivo `datos_muy_importantes.csv`. Pero ahora sí, viene `__file__` al rescate! Porque lo podemos usar para elegir el directorio base respecto del cual elegimos los archivos. Para eso, usamos `os.path.dirname` (que, a partir de una ruta absoluta o relativa, devuelve el _directorio_ en el que está el archivo) y `os.path.abspath`, que a partir de una ruta relativa genera la ruta absoluta.
 
 Entonces, modifiquemos un poquito el archivo `script.py`:
 
@@ -117,7 +121,7 @@ import os
 
 directorio_base = os.path.dirname(__file__)
 ruta_absoluta = os.path.abspath(directorio_base)
-ruta_donde_busco = ruta_absoluta + '/' + '../datos/datos_muy_importantes.csv'
+ruta_donde_busco = ruta_absoluta + '/' + '../carpeta_de_datos/datos_muy_importantes.csv'
 print("Voy a buscar en:")
 print(ruta_donde_busco)
 existe_el_archivo = os.path.exists(ruta_donde_busco)
@@ -134,16 +138,16 @@ else:
 (.../paquete) $ cd bin/
 (.../paquete/bin) $ python script.py
 Voy a buscar en:
-/home/pablo/blog/variables_dunder/paquete/bin/../datos/datos_muy_importantes.csv
+/home/pablo/blog/variables_dunder/paquete/bin/../carpeta_de_datos/datos_muy_importantes.csv
 Tranquiles! Los datos muy importantes están!
 (.../paquete/bin) $ cd ..
 (.../paquete) $ python bin/script.py
 Voy a buscar en:
-/home/pablo/blog/variables_dunder/paquete/bin/../datos/datos_muy_importantes.csv
+/home/pablo/blog/variables_dunder/paquete/bin/../carpeta_de_datos/datos_muy_importantes.csv
 Tranquiles! Los datos muy importantes están!
 ```
 
-Fíjense que en ambos casos busca en la misma carpeta y que, además, el sistema de archivos se da cuenta de que hacer `paquete/bin/../datos` es lo mismo que hacer directamente `paquete/datos`. Y así, gracias a la variable dunder `__file__` y la magia del sistema operativo, podemos poner direcciones _relativas al script_ en vez de que sean relativas al directorio en el que estamos trabajando.
+Fíjense que en ambos casos busca en la misma carpeta y que, además, el sistema de archivos se da cuenta de que hacer `paquete/bin/../carpeta_de_datos` es lo mismo que hacer directamente `paquete/carpeta_de_datos`. Y así, gracias a la variable dunder `__file__` y la magia del sistema operativo, podemos poner direcciones _relativas al script_ en vez de que sean relativas al directorio en el que estamos trabajando.
 
 
 ## Más variables dunder
